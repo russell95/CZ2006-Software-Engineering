@@ -1,0 +1,152 @@
+{% extends "layout.html" %}
+{% block content %}
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset = "utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+		
+		<title>NaviMall</title>
+		
+		<!-- Bootstrap CSS -->
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+        <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+
+        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+
+		<link href="{{ url_for('static', filename='css/navimall.css') }}" rel="stylesheet"/>
+		<script href="{{ url_for('static', filename='js/navimall.js') }}"></script>
+
+	</head>
+
+	<script type="text/javascript">
+
+			$(document).ready(function(){
+				var json = '{{result|tojson}}';
+				var removeQuotes = json.replace(/(^")|("$)/g, '');
+				var obj = JSON.parse(removeQuotes);
+				var length = obj.values.length;
+				var mallAddr;
+
+				var i;
+				var bodyInfo = "<div class=\"row\" style=\"background-color: rgb(150,150,150); color: white; font-weight: bold; padding: 10px;\">"+
+                  					"<div class=\"col-2\" width=\"100px\">Unit #</div>"+
+                  					"<div class=\"col-4\" width=\"40%\">Name</div>"+
+                  					"<div class=\"col-4\" width=\"40%\">Category</div>"+
+                  					"<div class=\"col\" width=\"100px\">Action</div>"+
+                				"</div>";
+
+
+				$("#editShopDiv").empty();
+				$("#mallNameTitle").empty();
+				$("#MallNameForm").empty();
+
+				$("#mallNameTitle").append(obj.mname);
+
+				var mallNameChangeForm = "<input name=\"newmallname\"class=\"col-md-8 form-control form-control-lg submit_on_enter\" type=\"text\" placeholder=\"New Mall Name\">" + "<input type=hidden name=\"oldmallname\" value=\""+ obj.mname +"\">"+
+					"<button type=\"submit\" class=\"col-md-3 btn btn-lg\">Change</button>";
+				$("#MallNameForm").append(mallNameChangeForm);
+
+				for(i=0;i<length;i++){
+                    
+					bodyInfo += "<form action=\"/adminLogin/updateSelectionPage/updateShopInfo\" method=\"post\" >"+
+                  					"<div class=\"row\" style=\"padding: 10px;\">"+
+                    					"<div class=\"col-2 unitNum\">"+obj.values[i].Unit+"</div>"+
+                    					"<input type=hidden name=\"unitNum\" value=\""+ obj.values[i].Unit +"\">"+
+                    					"<div class=\"col-4\">"+
+                    					"<input type=hidden name=\"oldsname\" value=\""+ obj.values[i].ShopName +"\">"+
+                      						"<input name=\"sname\" class=\"form-control\" type=\"text\" value=\""+obj.values[i].ShopName+"\">"+
+                    					"</div>"+
+                    					"<div class=\"col-4\">"+
+                      						"<input name=\"category\" class=\"form-control\" type=\"text\" value=\""+obj.values[i].Category+"\">"+
+                    					"</div>"+
+                    					"<input type=hidden name=\"mname\" value=\""+ obj.mname +"\">"+
+                    					"<div class=\"col\">"+
+                      						"<button class=\"btn btn-outline-secondary btn-sm updateBtn\" type=\"submit\">Update</button>"+
+                    					"</div>"+
+                  					"</div>"+
+                				"</form>";
+                    			
+                }
+                
+                $("#editShopDiv").append(bodyInfo);
+
+              
+			});
+
+		</script>
+
+
+	<body>
+		<nav class="navbar sticky-top navbar-light" style="background-color: rgb(217,217,217);">
+			<div class="navbar-brand">
+				<img src="{{url_for('static', filename='images/navimall_logo.png')}}" width="100" height="25" class="d-inline-block align-top" alt="">
+			</div>
+			<div>
+				<span class="navbar-text">Welcome, <strong>{{name}}</strong></span>
+				<a id="logOutBtn" role="button" class="btn btn-outline-secondary" href="/admin">Log Out</a>
+			</div>
+		</nav>
+		
+		<div id="adminUpdatePageSearchContent">
+			<ul class="nav nav-fill" id="myTab">
+				<li class="nav-item">
+					<a class="nav-link" href="/adminLogin/webscraper" role="button">Add New Mall</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link active">Update Mall</a>
+				</li>
+			</ul>
+			<br />
+			<div class="tab-pane fade show active" id="updateMall" role="tabpanel" aria-labelledby="update-shop-tab">
+				<form id="MallSearchForm" action="/adminLogin/updateSelectionPage/updateQueryPage" method="post">
+					<input name="mallquery" class="form-control form-control-lg submit_on_enter" type="text" placeholder="Search Mall to Update"> 
+          			<input type="Submit" style="position: absolute; left: -9999px; width: 1px; height: 1px; " tabindex="-1" >
+				</form>
+			</div>
+		</div>
+		
+		<h1 id="mallNameTitle" class="text-center"></h1>
+		
+		<div id="adminUpdatePageContent">
+			<h4 id="editMallNameTitle">Edit Mall Name</h4>
+			<div id="editMallNameDiv">
+				<form id="MallNameForm" class="row" action="/adminLogin/updateSelectionPage/updateMallName" method="post">
+					<!-- <input name="mallname"class="col-md-8 form-control form-control-lg submit_on_enter" type="text" placeholder="New Mall Name">
+					<button type="submit" class="col-md-3 btn btn-lg">Change</button> -->
+				</form>
+			</div>
+			
+			<h4 id="editShopTitle">Edit Shops</h4>
+			<div id="editShopDiv" class="container">
+				
+			</div>
+			
+		</div>
+		
+		<footer class="text-center">
+			<p>BitterSweet</p>
+			<p>Software Engineering Assignment</p>
+			<p>Nanyang Technological University</p>
+		</footer>
+		
+		<script type="text/javascript">
+			$('#table tbody tr').hover(function(){
+					$(this).addClass('selected').siblings().removeClass('selected');
+				});
+
+				$('.updateBtn').on('click', function(e){
+					alert("hi");
+					if($("#table tr.selected div").attr("class")=="hidden"){
+						$("#table tr.selected div").addClass('show').removeClass('hidden');
+						$("#table tr.selected").siblings().find('div').removeClass('show').addClass('hidden');
+					}else{
+						$("#table tr.selected div").removeClass('show').addClass('hidden');
+					}
+				});
+		</script>
+		
+	</body>
+</html>
+{% endblock %}

@@ -1,0 +1,65 @@
+{% extends "layout.html" %}
+{% block content %}
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset = "utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+		
+		<title>NaviMall</title>
+
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+		<link href="{{ url_for('static', filename='css/navimall.css') }}" rel="stylesheet"/>
+		
+	</head>
+	<body>
+		<nav class="navbar sticky-top navbar-light" style="background-color: rgb(217,217,217);">
+			<div class="navbar-brand">
+				<img src="{{url_for('static', filename='images/navimall_logo.png')}}" width="100" height="25" class="d-inline-block align-top" alt="">
+			</div>
+			<div>
+				<span class="navbar-text">Welcome, <strong>{{name}}</strong></span>
+				<a id="logOutBtn" role="button" class="btn btn-outline-secondary" href="/admin">Log Out</a>
+			</div>
+		</nav>
+		
+		<div id="adminSelectionPageContent">
+			<ul class="nav nav-fill" id="myTab">
+				<li class="nav-item">
+					<a class="nav-link active" data-toggle="tab" href="#addNewMall" role="tab" aria-controls="addMall" aria-selected="true">Add New Mall</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" data-toggle="tab" href="#updateMall" role="tab" aria-controls="updateMall" aria-selected="false">Update Mall</a>
+				</li>
+			</ul>
+			<br />
+			<br />
+			<div class="tab-content" id="myTabContent">
+				<div class="tab-pane fade show active" id="addNewMall" role="tabpanel" aria-labelledby="add-mall-tab" >
+					<form action="/adminLogin/webscraper" method="post" class="row">
+						<input name="mall" class="col-md-8 form-control form-control-lg submit_on_enter" type="text" placeholder="New Mall Name">
+						<button type="submit" class="col-md-3 btn btn-lg">Add Mall</button>
+					</form>
+					{{result}}
+				</div>
+				<div class="tab-pane fade" id="updateMall" role="tabpanel" aria-labelledby="update-shop-tab">
+					<form class="row" action="/adminLogin/updateSelectionPage" method="post">
+						<input name="mall"class="form-control form-control-lg submit_on_enter" type="text" placeholder="Search Mall to Update">
+						<input type="Submit" style="position: absolute; left: -9999px; width: 1px; height: 1px; "tabindex="-1" >
+					</form>
+				</div>
+			</div>
+		</div>
+		
+		<footer class="text-center">
+			<p>BitterSweet</p>
+			<p>Software Engineering Assignment</p>
+			<p>Nanyang Technological University</p>
+		</footer>
+		
+		
+	</body>
+</html>
+{% endblock %}

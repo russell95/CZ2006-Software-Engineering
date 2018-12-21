@@ -1,0 +1,74 @@
+{% extends "layout.html" %}
+{% block content %}
+<html>
+	<head>
+		<meta charset = "utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+		
+		<title>NaviMall</title>
+		
+		<!-- Bootstrap CSS -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+		<link href="{{ url_for('static', filename='css/navimall.css') }}" rel="stylesheet"/>
+		<script type="text/javascript">
+		 $(document).ready( function() {
+		 	
+     		var json = '{{result|tojson}}';
+			var removeQuotes = json.replace(/(^")|("$)/g, '');
+			var obj = JSON.parse(removeQuotes);
+			var length = obj.values.length;
+
+
+			var i;
+			var bodyInfo = "<tbody>";
+			$("#displayBody").empty();
+			$('#mallNameTitle').empty();
+			$("#mallNameTitle").append(obj.sname);  
+			for(i=0;i<length;i++){
+                
+                bodyInfo += "<tr>"+"<th>"+ obj.values[i].MallName + "</th>" 
+                				+ "<td>"
+						+ "<form action=\" /mallResults \" method=\"post\">" 
+                				+ "<button class=\"btn btn-outline-secondary btn-sm\" type=\"submit\" name=\"mall\" value=\""+obj.values[i].MallName+"\">" 
+                				+ "View Shops" + "</button>" 
+                				+ "</form>"
+                				+ "</td>" + "</tr>"
+            }
+            bodyInfo += "</tbody>"
+            $("#displayBody").append(bodyInfo); 
+
+             
+
+         });
+		</script>
+	</head>
+	<body>
+		<nav class="navbar sticky-top navbar-light" style="background-color: rgb(217,217,217);">
+			<a class="navbar-brand" href="/">
+				<img src="{{url_for('static', filename='images/navimall_logo.png')}}" width="100" height="25" class="d-inline-block align-top" alt="">
+			</a>
+		</nav>
+		
+		<h1 id="mallNameTitle" class="text-center"></h1>
+		<h2 id="outletTitle" class="text-center">Outlets</h2>
+		
+		<div id="mainPageContent">
+			
+		</div>
+		
+		<div id="outletResultTable">
+			<table class="table table-hover" id="displayBody">
+			</table>
+		</div>
+		
+		<footer class="text-center">
+			<p>BitterSweet</p>
+			<p>Software Engineering Assignment</p>
+			<p>Nanyang Technological University</p>
+		</footer>
+		
+	</body>
+</html>
+{% endblock %}

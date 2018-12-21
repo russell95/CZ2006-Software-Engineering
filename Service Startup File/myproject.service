@@ -1,0 +1,13 @@
+[Unit]
+Description=uWSGI instance to serve myproject
+After=network.target
+
+[Service]
+User=Russ
+Group=www-data
+WorkingDirectory=/home/Russ/SEProject
+Environment="PATH=/home/Russ/SEProject/navimallenv/bin"
+ExecStart=/home/Russ/SEProject/navimallenv/bin/uwsgi --ini myproject.ini
+
+[Install]
+WantedBy=multi-user.target

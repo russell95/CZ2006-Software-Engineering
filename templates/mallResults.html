@@ -1,0 +1,151 @@
+{% extends "layout.html" %}
+{% block content %}
+<html>
+	<head>
+		<meta charset = "utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+		
+		<title>NaviMall</title>
+		
+		<!-- Bootstrap CSS -->
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+		<link href="{{ url_for('static', filename='css/navimall.css') }}" rel="stylesheet"/>
+		<link href="{{ url_for('static', filename='css/scrollbar.css') }}" rel="stylesheet"/>
+		<link rel="shortcut icon" href="images/navimall_logo.png" />
+
+
+		<script type="text/javascript">
+			$(document).ready(function(){
+				var json = '{{result|tojson}}';
+				var removeQuotes = json.replace(/(^")|("$)/g, '');
+				var obj = JSON.parse(removeQuotes);
+				var length = obj.values.length;
+				var mallAddr;
+
+				var i;
+				var bodyInfo = "<tbody>";
+				$("#displayBody tbody").empty();
+				$('#mallNameTitle').empty();
+				$("#mallNameTitle").append(obj.mname);  
+				for(i=0;i<length;i++){
+                    
+                    bodyInfo += "<tr>"+"<td>"+ obj.values[i].ShopName + "</td>" 
+                    				+ "<td>"+ obj.values[i].Unit + "</td>" + "<td>"+ obj.values[i].Category + "</td>"
+                }
+                bodyInfo += "</tbody>"
+                $("#displayBody").append(bodyInfo);  
+                // $("#myTab").append("<a onclick=\"document.getElementById(\'parkingDisplay\').submit()\" class=\"nav-item nav-link\" role=\"tab\" name=\"parking_req\" value=\""+obj.names+"\">Parking </a>");
+			});
+
+			function displayCatResult()
+			{
+				var json = '{{result|tojson}}';
+				var removeQuotes = json.replace(/(^")|("$)/g, '');
+				var temp = JSON.parse(removeQuotes);	
+			  	var cat = document.getElementById('inputGroupSelect04').value;
+			  	var count = 0;
+				var length = temp.values.length;				
+    			var bodyInfo = "<tbody>";
+    			
+				 $("#displayBody tbody").empty();
+				 $('#mallNameTitle').empty();
+				 $("#errMsg").empty();
+				 $("#mallNameTitle").append(temp.mname);
+				 for(var i=0;i<length;i++){
+	                   
+	                   	if(cat.match('All Categories')){
+	                   		  count = count + 1;
+						      bodyInfo += "<tr><td>"+ temp.values[i].ShopName + "</td><td>"
+						         + temp.values[i].Unit + "</td><td>"+ temp.values[i].Category + "</td></tr>"
+     					}
+	                    else if(temp.values[i].Category == cat){
+	                     	bodyInfo += "<tr>"+"<td>"+ temp.values[i].ShopName + "</td>" 
+                    				+ "<td>"+ temp.values[i].Unit + "</td>" + "<td>"+ temp.values[i].Category + "</td></tr>"		
+                    				count = count + 1;
+	                    }	                 
+	             }
+	             if(count == 0){
+					$("#errMsg").append("No results found.");
+	             }
+	             bodyInfo += "</tbody>"
+	             $("#displayBody").append(bodyInfo);  
+			}
+
+		</script>
+
+
+	</head>
+	<body>
+		<nav class="navbar sticky-top navbar-light" style="background-color: rgb(217,217,217);">
+			
+			<a class="navbar-brand" href="/">
+				<img src="{{url_for('static', filename='images/navimall_logo.png')}}" width="100" height="25" class="d-inline-block align-top" alt="">
+			</a>
+		</nav>
+		
+		<h1 id="mallNameTitle" class="text-center"></h1>
+		
+		<div id="mainPageContent">
+			
+				<nav class="nav nav-justified" id="myTab">
+					<a class="nav-item nav-link active" href="#" role="tab">Shops</a>
+					<a href="/parkingResults" class="nav-item nav-link"  role="tab">Parking</a>
+				</nav>
+			
+			</br>
+				<form id="FilterByCatForm" method="GET" action="">
+							<div class="input-group">
+								<select class="custom-select" name="catReq" id="inputGroupSelect04" aria-label="Example select with button addon">
+									<option selected>All Categories</option>
+									<option value="Beauty">Beauty</option>
+									<option value="Halal F & B">Halal F & B</option>
+									<option value="Fashion">Fashion</option>
+									<option value="Electronics">Electronics</option>
+									<option value="Food & Beverages">Food & Beverages</option>
+									<option value="Sports">Sports</option>
+									<option value="Education">Education</option>
+									<option value="Supermarket">Supermarket</option>
+									<option value="Pet Shop">Pet Shop</option>
+									<option value="Entertainment">Entertainment</option>
+									<option value="Jewellery">Jewellery</option>
+									<option value="Bank">Bank</option>
+									<option value="Others">Others</option>
+								</select>
+								<div class="input-group-append">
+									<button class="btn btn-outline-secondary" type="button" onclick="displayCatResult()" >Search</button>
+								</div>
+							</div>
+						</form>
+			</br>
+		</div>
+		
+		<div id="resultTable">
+			<table class="table table-hover" id="displayBody">
+				<thead>
+					<tr>
+						
+						<th scope="col">Shop</th>
+						<th scope="col">Unit</th>
+						<th scope="col">Category</th>
+					</tr>
+				</thead>
+				
+				
+			</table>
+			<h6 id="errMsg"></h6>
+		</div> 
+		
+		<footer class="text-center">
+			<p>BitterSweet</p>
+			<p>Software Engineering Assignment</p>
+			<p>Nanyang Technological University</p>
+		</footer>
+		
+		
+		
+		<!-- <script type="text/javascript" src="{{ url_for('static', filename='js/navimall.js') }}"></script> -->
+	</body>
+</html>
+{% endblock %}
